@@ -143,10 +143,11 @@ product_2_f:
   ;Mis parametros segun ABI: destination: RDI, x1: RSI, f1: XMM0
   ;Quiero convertir a 'x1' en un foat para multiplicar 'f1' con 'x1'
 
-  cvtsi2ss XMM1, RSI; XMM1 es volatil por lo que no hace falta preservalo
-  mulss XMM0, XMM1
+  cvtss2sd XMM0, XMM0; paso de float a double
+  cvtsi2sd XMM1, RSI; XMM1 es volatil por lo que no hace falta preservalo
+  mulsd XMM0, XMM1; mulsd es para doubles y mulss es para floats
   
-  cvttss2si EAX, XMM0; cvttss2si es una operacion de registro a registro
+  cvttsd2si EAX, XMM0; cvttss2si es una operacion de registro a registro
   mov [RDI], EAX; [RDI] porque RDI tiene a un puntero
 
   ;epilogo
@@ -158,16 +159,26 @@ product_2_f:
 ;, uint32_t x1, float f1, uint32_t x2, float f2, uint32_t x3, float f3, uint32_t x4, float f4
 ;, uint32_t x5, float f5, uint32_t x6, float f6, uint32_t x7, float f7, uint32_t x8, float f8
 ;, uint32_t x9, float f9);
-;registros y pila: destination[rdi], x1[?], f1[?], x2[?], f2[?], x3[?], f3[?], x4[?], f4[?]
-;	, x5[?], f5[?], x6[?], f6[?], x7[?], f7[?], x8[?], f8[?],
-;	, x9[?], f9[?]
+;registros y pila: destination[rdi], x1[RSI], f1[XMM0], x2[RDX], f2[XMM1], x3[RCX], f3[XMM2], x4[R8], f4[XMM3]
+;	, x5[R9], f5[XMM4], x6[RBP+48], f6[XMM5], x7[RBP+40], f7[XMM6], x8[RBP+32], f8[XMM7],
+;	, x9[RBP+24], f9[RBP+16]
 product_9_f:
 	;prologo
 	push rbp
 	mov rbp, rsp
 
 	;convertimos los flotantes de cada registro xmm en doubles
-	; COMPLETAR
+  cvtss2sd XMM0, XMM0
+  cvtss2sd XMM1, XMM1
+  cvtss2sd XMM2, XMM2
+  cvtss2sd XMM3, XMM3
+  cvtss2sd XMM4, XMM4
+  cvtss2sd XMM5, XMM5
+  cvtss2sd XMM6, XMM6
+  cvtss2sd XMM7, XMM7
+  movss XMM8, [RBP+16]
+  cvtss2sd XMM8, XMM8
+	
 
 	;multiplicamos los doubles en xmm0 <- xmm0 * xmm1, xmmo * xmm2 , ...
 	; COMPLETAR
