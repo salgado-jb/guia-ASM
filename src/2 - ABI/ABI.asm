@@ -100,6 +100,18 @@ alternate_sum_4_using_c_alternative:
 ; registros y pila: x1[?], x2[?], x3[?], x4[?], x5[?], x6[?], x7[?], x8[?]
 alternate_sum_8:
 	;prologo
+  push RBP
+  mov RBP, RSP
+  push R12
+  push R13
+  ;push R14;En realidad estos dos me parece que no van
+  ;push R15;porque dos de los parametros de entrada ya deben ido al stack
+
+
+  mov R12D, E8;Guardo los parametros x5 y x6 ya que estan en registros volatiles
+  mov R13D, E9;y tienen que sobrevivir al llamado a funcion
+  call alternate_sum_4_using_c;Esto deberia usar los registros RDI, RSI, RDX, y RCX
+
 
 	; COMPLETAR
 
