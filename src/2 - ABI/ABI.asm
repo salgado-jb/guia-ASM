@@ -108,14 +108,27 @@ alternate_sum_8:
   ;push R15;porque dos de los parametros de entrada ya deben ido al stack
 
 
-  mov R12D, E8;Guardo los parametros x5 y x6 ya que estan en registros volatiles
-  mov R13D, E9;y tienen que sobrevivir al llamado a funcion
+  mov R12D, R8D;Guardo los parametros x5 y x6 ya que estan en registros volatiles
+  mov R13D, R9D;y tienen que sobrevivir al llamado a funcion
   call alternate_sum_4_using_c;Esto deberia usar los registros RDI, RSI, RDX, y RCX
 
+  ;Como estoy volviendo de una call, asumo que todos los valores que estaban en registros volatiles son basura
 
-	; COMPLETAR
+  mov EDI, R12D;x5
+  mov ESI, R13D;x6
+  mov EDX, [RBP+16];x7 ESTOY SUMANDO EN VEZ DE RESTANDO PORQUE LOS ARGUMENTOS ESTOS ESTAN ANTES QUE RBP
+  mov ECX, [RBP+24];x8 Y TENGO QUE TENER EN CUENTA QUE EN [RBP] Y [RBP+8] ESTA EL VIEJO RBP Y LA DIR DE RETORNO
+  mov R12D, EAX;Muevo el resultado que me dio el primer call en este registro volatil que ya no uso
+  call alternate_sum_4_using_c
+
+  mov EDI, R12D
+  mov ESI, EAX
+  sumar_c;Me parece que el resultado de esto queda en RAX/EAX por lo que no lo tengo que mover mas
 
 	;epilogo
+  pop R13
+  pop R12
+  pop RBP
 	ret
 
 
