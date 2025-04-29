@@ -4,158 +4,37 @@
 make: 'tester' is up to date.
 
 ** Corriendo Valgrind
-==21328== Memcheck, a memory error detector
-==21328== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==21328== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
-==21328== Command: ./tester
-==21328== 
+==24817== Memcheck, a memory error detector
+==24817== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==24817== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
+==24817== Command: ./tester
+==24817== 
 ==============
 = ABI 
 ==============
 - test_alternate_sum_4 OK
 - test_alternate_sum_4_using_c OK
 - test_alternate_sum_8 OK
-==21328== Invalid write of size 4
-==21328==    at 0x402A82: ??? (ABI.asm:150)
-==21328==    by 0x4020BB: test_product_2_f__impl (tester.c:64)
-==21328==    by 0x401FC1: test_product_2_f (tester.c:58)
-==21328==    by 0x40298F: main (tester.c:97)
-==21328==  Address 0x1e9 is not stack'd, malloc'd or (recently) free'd
-==21328== 
-==21328== 
-==21328== Process terminating with default action of signal 11 (SIGSEGV)
-==21328==  Access not within mapped region at address 0x1E9
-==21328==    at 0x402A82: ??? (ABI.asm:150)
-==21328==    by 0x4020BB: test_product_2_f__impl (tester.c:64)
-==21328==    by 0x401FC1: test_product_2_f (tester.c:58)
-==21328==    by 0x40298F: main (tester.c:97)
-==21328==  If you believe this happened as a result of a stack
-==21328==  overflow in your program's main thread (unlikely but
-==21328==  possible), you can try to increase the size of the
-==21328==  main thread stack using the --main-stacksize= flag.
-==21328==  The main thread stack size used in this run was 8388608.
-==21328== 
-==21328== HEAP SUMMARY:
-==21328==     in use at exit: 1,024 bytes in 1 blocks
-==21328==   total heap usage: 1 allocs, 0 frees, 1,024 bytes allocated
-==21328== 
-==21328== 1,024 bytes in 1 blocks are still reachable in loss record 1 of 1
-==21328==    at 0x4848858: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==21328==    by 0x48F93D6: _IO_file_doallocate (filedoalloc.c:101)
-==21328==    by 0x4909833: _IO_doallocbuf (genops.c:374)
-==21328==    by 0x49072BF: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:745)
-==21328==    by 0x4907DDF: _IO_new_file_xsputn (fileops.c:1244)
-==21328==    by 0x4907DDF: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1197)
-==21328==    by 0x48FBEF9: puts (ioputs.c:40)
-==21328==    by 0x40293D: main (tester.c:91)
-==21328== 
-==21328== LEAK SUMMARY:
-==21328==    definitely lost: 0 bytes in 0 blocks
-==21328==    indirectly lost: 0 bytes in 0 blocks
-==21328==      possibly lost: 0 bytes in 0 blocks
-==21328==    still reachable: 1,024 bytes in 1 blocks
-==21328==         suppressed: 0 bytes in 0 blocks
-==21328== 
-==21328== For lists of detected and suppressed errors, rerun with: -s
-==21328== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-./runTester.sh: line 20: 21328 Segmentation fault      (core dumped) valgrind --show-reachable=yes --leak-check=full --error-exitcode=99 ./tester
+- test_product_2_f FAILED
+    al probar product_2_f(&result, 460, 846.24)
+    fallo en tester.c:65
+        Esperado: 389270
+        Recibido: 389271
+- test_product_9_f FAILED
+    al probar product_9_f(&result, 469, 358.77, 870, 120.19, 7, 831.74, 509, 486.58, 220, 581.67, 825, 105.33, 664, 724.20, 259, 441.43, 355, 843.41)
+    fallo en tester.c:81
+        Esperado: 4643989417025369021970054862590782724840095744.00
+        Recibido: inf
+
+Pasaron 3 de 5 tests
+Fallaron algunos tests de ABI.
+==24817== 
+==24817== HEAP SUMMARY:
+==24817==     in use at exit: 0 bytes in 0 blocks
+==24817==   total heap usage: 1 allocs, 1 frees, 1,024 bytes allocated
+==24817== 
+==24817== All heap blocks were freed -- no leaks are possible
+==24817== 
+==24817== For lists of detected and suppressed errors, rerun with: -s
+==24817== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 ** Error durante la ejecución
-
-
-Y depues corro:
-./runAbi.sh
-
-** Compilando
-nasm -f elf64 -g -F DWARF -p "abi_enforcer.mac" ABI.asm -o ABI_abi.o
-cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ -DWITH_ABI_ENFORCER=1 tester.o ABI_abi.o abi_enforcer_regsave.o ABI_c.o -o abi_enforcer_tester
-
-** Corriendo Valgrind
-==21511== Memcheck, a memory error detector
-==21511== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==21511== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
-==21511== Command: ./abi_enforcer_tester
-==21511== 
-==============
-= ABI 
-==============
-- test_alternate_sum_4 OK
-- test_alternate_sum_4_using_c OK
-- test_alternate_sum_8 OK
-==21511== Invalid write of size 4
-==21511==    at 0x403C2F: ??? (ABI.asm:150)
-==21511==    by 0x4020BB: test_product_2_f__impl (tester.c:64)
-==21511==    by 0x401FC1: test_product_2_f (tester.c:58)
-==21511==    by 0x40298F: main (tester.c:97)
-==21511==  Address 0x1e9 is not stack'd, malloc'd or (recently) free'd
-==21511== 
-==21511== 
-==21511== Process terminating with default action of signal 11 (SIGSEGV)
-==21511==  Access not within mapped region at address 0x1E9
-==21511==    at 0x403C2F: ??? (ABI.asm:150)
-==21511==    by 0x4020BB: test_product_2_f__impl (tester.c:64)
-==21511==    by 0x401FC1: test_product_2_f (tester.c:58)
-==21511==    by 0x40298F: main (tester.c:97)
-==21511==  If you believe this happened as a result of a stack
-==21511==  overflow in your program's main thread (unlikely but
-==21511==  possible), you can try to increase the size of the
-==21511==  main thread stack using the --main-stacksize= flag.
-==21511==  The main thread stack size used in this run was 8388608.
-==21511== 
-==21511== HEAP SUMMARY:
-==21511==     in use at exit: 1,024 bytes in 1 blocks
-==21511==   total heap usage: 1 allocs, 0 frees, 1,024 bytes allocated
-==21511== 
-==21511== 1,024 bytes in 1 blocks are still reachable in loss record 1 of 1
-==21511==    at 0x4848858: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==21511==    by 0x48F93D6: _IO_file_doallocate (filedoalloc.c:101)
-==21511==    by 0x4909833: _IO_doallocbuf (genops.c:374)
-==21511==    by 0x49072BF: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:745)
-==21511==    by 0x4907DDF: _IO_new_file_xsputn (fileops.c:1244)
-==21511==    by 0x4907DDF: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1197)
-==21511==    by 0x48FBEF9: puts (ioputs.c:40)
-==21511==    by 0x40293D: main (tester.c:91)
-==21511== 
-==21511== LEAK SUMMARY:
-==21511==    definitely lost: 0 bytes in 0 blocks
-==21511==    indirectly lost: 0 bytes in 0 blocks
-==21511==      possibly lost: 0 bytes in 0 blocks
-==21511==    still reachable: 1,024 bytes in 1 blocks
-==21511==         suppressed: 0 bytes in 0 blocks
-==21511== 
-==21511== For lists of detected and suppressed errors, rerun with: -s
-==21511== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-./runAbi.sh: line 20: 21511 Segmentation fault      (core dumped) valgrind --show-reachable=yes --leak-check=full --error-exitcode=99 ./abi_enforcer_tester
-** Error durante la ejecución
-
-
-
-
-
-
-
-product_2_f:
-  ;prologo
-  push RBP
-  mov RBP, RSP
-  
-  ;Mis parametros segun ABI: f1: XMM0, x1: RDI, destination: RSI
-  ;Quiero convertir a 'x1' en un foat para multiplicar 'f1' con 'x1'
-
-  cvtsi2ss XMM1, RDI; XMM1 es volatil por lo que no hace falta preservalo
-  mulss XMM0, XMM1
-  
-  cvttss2si EAX, XMM0; cvttss2si es una operacion de registro a registro
-  mov [RSI], EAX; [RSI] porque RSI tiene a un puntero
-
-  ;epilogo
-  pop RBP
-	ret
-
-
-product_2_f:
-  cvtss2sd XMM0, XMM0
-  cvtsi2sd XMM1, RSI
-  mulsd XMM0, XMM1
-  cvttsd2si EAX, XMM0
-  mov [RDI], EAX
-  ret
