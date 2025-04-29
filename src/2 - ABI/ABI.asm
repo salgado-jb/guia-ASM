@@ -140,14 +140,14 @@ product_2_f:
   push RBP
   mov RBP, RSP
   
-  ;Mis parametros segun ABI: f1: XMM0, x1: RDI, destination: RSI
+  ;Mis parametros segun ABI: destination: RDI, x1: RSI, f1: XMM0
   ;Quiero convertir a 'x1' en un foat para multiplicar 'f1' con 'x1'
 
-  cvtsi2ss XMM1, RDI; XMM1 es volatil por lo que no hace falta preservalo
+  cvtsi2ss XMM1, RSI; XMM1 es volatil por lo que no hace falta preservalo
   mulss XMM0, XMM1
   
   cvttss2si EAX, XMM0; cvttss2si es una operacion de registro a registro
-  mov [RSI], EAX; [RSI] porque RSI tiene a un puntero
+  mov [RDI], EAX; [RDI] porque RDI tiene a un puntero
 
   ;epilogo
   pop RBP
