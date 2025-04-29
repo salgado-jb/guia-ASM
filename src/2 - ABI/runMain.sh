@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-reset
+#reset
 
 command -v valgrind > /dev/null
 if [ $? -ne 0 ]; then
@@ -19,3 +19,4 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+#Este archivo no tenia permisos de ejecucion y tuve que correr "chmod +x runMain.sh"

@@ -123,7 +123,7 @@ alternate_sum_8:
 
   mov EDI, R12D
   mov ESI, EAX
-  sumar_c;Me parece que el resultado de esto queda en RAX/EAX por lo que no lo tengo que mover mas
+  call sumar_c;Me parece que el resultado de esto queda en RAX/EAX por lo que no lo tengo que mover mas
 
 	;epilogo
   pop R13
@@ -136,6 +136,21 @@ alternate_sum_8:
 ;void product_2_f(uint32_t * destination, uint32_t x1, float f1);
 ;registros: destination[?], x1[?], f1[?]
 product_2_f:
+  ;prologo
+  push RBP
+  mov RBP, RSP
+  
+  ;Mis parametros segun ABI: f1: XMM0, x1: RDI, destination: RSI
+  ;Quiero convertir a 'x1' en un foat para multiplicar 'f1' con 'x1'
+
+  cvtsi2ss XMM1, RDI; XMM1 es volatil por lo que no hace falta preservalo
+  mulss XMM0, XMM1
+  
+  cvttss2si EAX, XMM0; cvttss2si es una operacion de registro a registro
+  mov [RSI], EAX; [RSI] porque RSI tiene a un puntero
+
+  ;epilogo
+  pop RBP
 	ret
 
 

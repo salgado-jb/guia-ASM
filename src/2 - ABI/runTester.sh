@@ -30,3 +30,4 @@ else
 fi
 echo
 
+#Para que me corra esto tuve que cambiar el limite de descriptores de archivos de mi sistema con "ulimit -n 4096"
