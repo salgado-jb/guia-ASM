@@ -2,11 +2,11 @@
 
 ;########### ESTOS SON LOS OFFSETS Y TAMAÑO DE LOS STRUCTS
 ; Completar las definiciones (serán revisadas por ABI enforcer):
-NODO_OFFSET_NEXT EQU 0;Una struct con un puntero unicamente: 4 bytes
-NODO_OFFSET_CATEGORIA EQU 4;uint8_t o sea 1 byte (padding: 3 bytes)
+NODO_OFFSET_NEXT EQU 0;Una struct con un puntero unicamente: 8 bytes
+NODO_OFFSET_CATEGORIA EQU 8;uint8_t o sea 1 byte (padding: 3 bytes)
 NODO_OFFSET_ARREGLO EQU 8;uint32_t o sea 4 bytes (no hace falta padding)
-NODO_OFFSET_LONGITUD EQU 12;uint32_t o sea 4 bytes (no hace falta padding)
-NODO_SIZE EQU 16
+NODO_OFFSET_LONGITUD EQU 12;uint32_t o sea 4 bytes (padding: 4 bytes)
+NODO_SIZE EQU 24
 PACKED_NODO_OFFSET_NEXT EQU 8
 PACKED_NODO_OFFSET_CATEGORIA EQU 8
 PACKED_NODO_OFFSET_ARREGLO EQU 8
