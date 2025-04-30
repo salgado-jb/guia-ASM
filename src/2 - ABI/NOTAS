@@ -22,17 +22,12 @@ cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-
 cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ -c tester.c -o tester.o
 cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ tester.o Estructuras_asm.o Estructuras_c.o -o tester
 Revisando offsets y tamaños de structs declarados en checkpoint...
-python3 -m venv venv
-The virtual environment was not created successfully because ensurepip is not
-available.  On Debian/Ubuntu systems, you need to install the python3-venv
-package using the following command.
-
-    apt install python3.12-venv
-
-You may need to use sudo with that command.  After installing the python3-venv
-package, recreate your virtual environment.
-
-Failing command: /home/23pez/Facultad/guia-ASM/src/test_utils/venv/bin/python3
-
-make[1]: *** [Makefile:12: venv] Error 1
+Traceback (most recent call last):
+  File "/home/23pez/Facultad/guia-ASM/src/test_utils/parse.py", line 6, in <module>
+    import pycparser
+ModuleNotFoundError: No module named 'pycparser'
+/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/14/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+(.text+0x1b): undefined reference to `main'
+collect2: error: ld returned 1 exit status
+make[1]: *** [Makefile:4: diff] Error 1
 make: *** [Makefile:41: Estructuras_abi.o] Error 2

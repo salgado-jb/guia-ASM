@@ -35,6 +35,7 @@ cantidad_total_de_elementos:
 	mov RBP, RSP
 
 	mov RAX, [RDI+LISTA_OFFSET_HEAD]; Muevo el puntero a head a RAX (XMM son para operaciones vectoriales o de punto flotante)
+	; Igual, ese offset es 0
 
 	xor ECX, ECX; contador = 0
 .loop:
