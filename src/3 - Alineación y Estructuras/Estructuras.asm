@@ -34,7 +34,19 @@ cantidad_total_de_elementos:
 	push RBP
 	mov RBP, RSP
 
+	mov RAX, [RDI+LISTA_OFFSET_HEAD]; Muevo el puntero a head a RAX (XMM son para operaciones vectoriales o de punto flotante)
 
+	xor ECX, ECX; contador = 0
+.loop:
+	cmp RAX, 0; es NULL?
+	je .fin; si era NULL, terminamos
+	inc ECX; si no, contador++
+	mov RAX, [RAX+NODO_OFFSET_NEXT];Pongo RAX en next
+	jmp .loop
+
+.fin:
+	mov EAX, ECX
+	pop RBP
 	ret
 
 ;extern uint32_t cantidad_total_de_elementos_packed(packed_lista_t* lista);

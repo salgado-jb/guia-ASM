@@ -1,4 +1,4 @@
-23pez@UbuntuUba:~/Facultad/guia-ASM/src/2 - ABI$ make
+make
 cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ -c main.c -o main.o
 In file included from main.c:7:
 ../test-utils.h:106:13: warning: ‘print_double’ defined but not used [-Wunused-function]
@@ -16,14 +16,23 @@ In file included from main.c:7:
 ../test-utils.h:102:13: warning: ‘print_int32_t’ defined but not used [-Wunused-function]
   102 | static void print_int32_t(int32_t v)  { printf("%d",   v); }
       |             ^~~~~~~~~~~~~
-nasm -f elf64 -g -F DWARF ABI.asm -o ABI_asm.o
-ABI.asm:219: error: invalid combination of opcode and operands
-make: *** [Makefile:35: ABI_asm.o] Error 1
-23pez@UbuntuUba:~/Facultad/guia-ASM/src/2 - ABI$ ./runTester.sh
-
-** Compilando
+nasm -f elf64 -g -F DWARF Estructuras.asm -o Estructuras_asm.o
+cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ -c Estructuras.c -o Estructuras_c.o
+cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ main.o Estructuras_asm.o Estructuras_c.o -o main
 cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ -c tester.c -o tester.o
-nasm -f elf64 -g -F DWARF ABI.asm -o ABI_asm.o
-ABI.asm:219: error: invalid combination of opcode and operands
-make: *** [Makefile:35: ABI_asm.o] Error 1
-  ** Error de compilacion
+cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ tester.o Estructuras_asm.o Estructuras_c.o -o tester
+Revisando offsets y tamaños de structs declarados en checkpoint...
+python3 -m venv venv
+The virtual environment was not created successfully because ensurepip is not
+available.  On Debian/Ubuntu systems, you need to install the python3-venv
+package using the following command.
+
+    apt install python3.12-venv
+
+You may need to use sudo with that command.  After installing the python3-venv
+package, recreate your virtual environment.
+
+Failing command: /home/23pez/Facultad/guia-ASM/src/test_utils/venv/bin/python3
+
+make[1]: *** [Makefile:12: venv] Error 1
+make: *** [Makefile:41: Estructuras_abi.o] Error 2
