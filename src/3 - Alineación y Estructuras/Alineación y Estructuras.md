@@ -20,7 +20,7 @@ Observemos el siguiente caso particular. ¿Cómo hacemos para que cada variable 
 
 ![Múltiples Variables Desalineadas](../../img/Desalineadas.png)
 
-Simplemente forzamos la alineación de cada una, dejando posiciones en blanco entre ellas donde sea necesario, a las que llamamos padding.
+Simplemente forzamos la alineación de cada una, dejando posiciones en blanco entre ellas donde sea necesario, a las que llamamos padding. (EN REALIDAD, A MENOS QUE SE ACCEDA MUCHO A 'a', ES REGLA GENERAL PONER PRIMERO LOS DATOS GRANDES PARA QUE EL PADDING QUEDE AL FINAL)
 
 ![Variables alineadas con padding](../../img/Alineadas.png)
 
@@ -48,11 +48,15 @@ Observen cómo varía el tamaño de estas estructuras según el orden en que se 
 
 Si bien el array es el atributo más grande, lo que importa es el tamaño del tipo más grande de sus atributos. El array es de tipo `char`, que ocupa un byte, y por lo tanto el atributo con el tipo más grande es `elo`, que por ser `long` ocupa 8 bytes. Luego, el tamaño de la estructura es 40 bytes (8 + 21 + 3 (padding) + 4 + 4 (padding)), pero su requisito de alineación es de 8 bytes.
 
+Y ACA EN REALIDAD CONVENIA PONER char name[21]; AL FINAL.
+
 ¿Cómo afecta que un atributo del struct sea un struct?
 
 ![Alineacion de structs con structs](../../img/StructConStruct.png)
 
 Para este caso, se tiene en cuenta el requisito de alineación del struct interno (en el ejemplo llamado `hijo`) como el tamaño del "tipo" del struct interno. En este caso, tener al atributo `hijo` como un struct, es equivalente a tener un `long` en su lugar, en lo que respecta a las reglas de alineación. Entonces, el tamaño de esta estructura es 32 bytes (1 + 7(padding) + 16(`sizeof(hijo)`) + 4 + 4(padding)).
+
+ACA CONVENIA hijo, y, c
 
 Si encuentran otro caso que les genere duda, recuerden que pueden hacer un código de prueba en el que declaran el struct y lo inspeccionan con GDB.
 

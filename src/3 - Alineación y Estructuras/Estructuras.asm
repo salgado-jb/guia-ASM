@@ -2,7 +2,7 @@
 
 ;########### ESTOS SON LOS OFFSETS Y TAMAÑO DE LOS STRUCTS
 ; Completar las definiciones (serán revisadas por ABI enforcer):
-NODO_OFFSET_NEXT EQU 8
+NODO_OFFSET_NEXT EQU 0
 NODO_OFFSET_CATEGORIA EQU 8
 NODO_OFFSET_ARREGLO EQU 8
 NODO_OFFSET_LONGITUD EQU 8
@@ -29,8 +29,12 @@ global cantidad_total_de_elementos_packed
 
 ;########### DEFINICION DE FUNCIONES
 ;extern uint32_t cantidad_total_de_elementos(lista_t* lista);
-;registros: lista[?]
+;registros: lista[RDI]
 cantidad_total_de_elementos:
+	push RBP
+	mov RBP, RSP
+
+
 	ret
 
 ;extern uint32_t cantidad_total_de_elementos_packed(packed_lista_t* lista);

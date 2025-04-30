@@ -216,10 +216,9 @@ product_9_f:
   mulsd XMM0,XMM8
   mulsd XMM0,XMM9
 
-  mov [RDI], XMM0 ; guardo el int en la dir de memoria que tiene RDI
+  movsd [RDI], XMM0 ; guardo el int en la dir de memoria que tiene RDI  ;movsd para que mov interprete lo que hay en XMM0 como SD scalar double
 
 
 	; epilogo
 	pop rbp
 	ret
-
