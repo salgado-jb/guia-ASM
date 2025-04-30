@@ -159,9 +159,9 @@ product_2_f:
 ;, uint32_t x1, float f1, uint32_t x2, float f2, uint32_t x3, float f3, uint32_t x4, float f4
 ;, uint32_t x5, float f5, uint32_t x6, float f6, uint32_t x7, float f7, uint32_t x8, float f8
 ;, uint32_t x9, float f9);
-;registros y pila: destination[rdi], x1[RSI], f1[XMM0], x2[RDX], f2[XMM1], x3[RCX], f3[XMM2], x4[R8], f4[XMM3]
-;	, x5[R9], f5[XMM4], x6[RBP+48], f6[XMM5], x7[RBP+40], f7[XMM6], x8[RBP+32], f8[XMM7],
-;	, x9[RBP+24], f9[RBP+16]
+;registros y pila: destination[rdi], x1[RSI], f1[XMM0], x2[RDX], f2[XMM1], x3[RCX], f3[XMM2], x4[R8D], f4[XMM3]
+;	, x5[R9D], f5[XMM4], x6[RBP+16], f6[XMM5], x7[RBP+24], f7[XMM6], x8[RBP+32], f8[XMM7],
+;	, x9[RBP+40], f9[RBP+48]
 product_9_f:
 	;prologo
 	push rbp
@@ -176,15 +176,48 @@ product_9_f:
   cvtss2sd XMM5, XMM5
   cvtss2sd XMM6, XMM6
   cvtss2sd XMM7, XMM7
-  movss XMM8, [RBP+16]
+  movss XMM8, [RBP+48]
   cvtss2sd XMM8, XMM8
 	
 
 	;multiplicamos los doubles en xmm0 <- xmm0 * xmm1, xmmo * xmm2 , ...
-	; COMPLETAR
+	mulsd XMM0, XMM1
+  mulsd XMM0, XMM2
+  mulsd XMM0, XMM3
+  mulsd XMM0, XMM4
+  mulsd XMM0, XMM5
+  mulsd XMM0, XMM6
+  mulsd XMM0, XMM7
+  mulsd XMM0, XMM8
+
 
 	; convertimos los enteros en doubles y los multiplicamos por xmm0.
-	; COMPLETAR
+	cvtsi2sd XMM1, RSI
+  cvtsi2sd XMM2, RDX
+  cvtsi2sd XMM3, RCX
+  cvtsi2sd XMM4, R8D
+  cvtsi2sd XMM5, R9D
+  mov EAX, [RBP+16]   ;7 arg: uint32_t x5
+  cvtsi2sd XMM6, EAX  ;xmm9 = (double)x5
+  mov EAX, [RBP+24]
+  cvtsi2sd XMM7, EAX
+  mov EAX, [RBP+32]
+  cvtsi2sd XMM8, EAX
+  mov EAX, [RBP+40]
+  cvtsi2sd XMM9, EAX
+
+  mulsd XMM0,XMM1
+  mulsd XMM0,XMM2
+  mulsd XMM0,XMM3
+  mulsd XMM0,XMM4
+  mulsd XMM0,XMM5
+  mulsd XMM0,XMM6
+  mulsd XMM0,XMM7
+  mulsd XMM0,XMM8
+  mulsd XMM0,XMM9
+
+  mov [RDI], XMM0 ; guardo el int en la dir de memoria que tiene RDI
+
 
 	; epilogo
 	pop rbp
