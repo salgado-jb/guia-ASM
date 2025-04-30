@@ -41,7 +41,7 @@ cantidad_total_de_elementos:
 .loop:
 	cmp RAX, 0; es NULL?
 	je .fin; si era NULL, terminamos
-	inc ECX; si no, contador++
+	add ECX, [RAX+NODO_OFFSET_LONGITUD]; si no, sumo la cantidad de elementos en el nodo
 	mov RAX, [RAX+NODO_OFFSET_NEXT];Pongo RAX en next
 	jmp .loop
 
@@ -53,5 +53,22 @@ cantidad_total_de_elementos:
 ;extern uint32_t cantidad_total_de_elementos_packed(packed_lista_t* lista);
 ;registros: lista[?]
 cantidad_total_de_elementos_packed:
-	ret
+	push RBP
+	mov RBP, RSP
 
+	mov RAX, [RDI+PACKED_LISTA_OFFSET_HEAD]; Muevo el puntero a head a RAX (XMM son para operaciones vectoriales o de punto flotante)
+	; Igual, ese offset es 0
+
+	xor ECX, ECX; contador = 0
+.loop:
+	cmp RAX, 0; es NULL?
+	je .fin; si era NULL, terminamos
+	add ECX, [RAX+PACKED_NODO_OFFSET_LONGITUD]; si no, sumo la cantidad de elementos en el nodo
+	mov RAX, [RAX+PACKED_NODO_OFFSET_NEXT];Pongo RAX en next
+	jmp .loop
+
+.fin:
+	mov EAX, ECX
+	pop RBP
+	ret
+;Entonces, lo unico que cambie fueron los offsets

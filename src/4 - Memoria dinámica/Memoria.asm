@@ -31,7 +31,21 @@ strPrint:
 	ret
 
 ; uint32_t strLen(char* a)
+;a[RDI]
 strLen:
+	push RBP
+	mov RBP, RSP
+
+	xor ECX, ECX; acumulador = 0
+
+.loop:
+	cmp byte [RDI], 0; tambien podia hacer mov AL, byte [RDI] y despues cmp AL, 0 (AL es el byte bajo de RAX)
+	je .fin
+	inc ECX
+	inc RDI
+	jmp .loop
+
+.fin:
+	mov EAX, ECX
+	pop RBP
 	ret
-
-
