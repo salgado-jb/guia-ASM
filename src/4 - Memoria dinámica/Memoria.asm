@@ -32,12 +32,12 @@ strDelete:
 ; void strPrint(char* a, FILE* pFile)
 ;a[RDI], pFile[RSI]
 strPrint:
-	push RBP
-	mov RBP, RSP
+	;push RBP; ESTO NO HACE FALTA PORQUE NO USO VARIABLES LOCALES
+	;mov RBP, RSP
 	;Quiero hacer un call a la funcion fprintf(FILE, "%s", STRING o "NULL")
 
-	cmp [RDI], 0
-	je .stringVacio
+	cmp byte [RDI], 0
+	je .print_null
 
 	mov RDX, RDI;Pongo a en en RDX (tercer argumento)
 	mov RDI, RSI;Pongo pFile en RDI (primer argumento)
@@ -52,8 +52,15 @@ strPrint:
 	call fprintf
 
 .done:
-	pop RBP
+	;pop RBP; ESTO NO HACE FALTA
 	ret
+
+;void strPrint(char *a, FILE *pFile) {
+;    if(a[0] == '\0')
+;        fprintf(pFile, "%s", "NULL");
+;    else
+;        fprintf(pFile, "%s", a);
+;}
 
 ; uint32_t strLen(char* a)
 ;a[RDI]
@@ -74,11 +81,3 @@ strLen:
 	mov EAX, ECX
 	pop RBP
 	ret
-
-
-;void strPrint(char *a, FILE *pFile) {
-;    if(a[0] == '\0')
-;        fprintf(pFile, "%s", "NULL");
-;    else
-;        fprintf(pFile, "%s", a);
-;}
