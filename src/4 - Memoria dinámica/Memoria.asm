@@ -18,6 +18,7 @@ global strLen
 ; ** String **
 
 ; int32_t strCmp(char* a, char* b)
+;a[RDI], b[RSI]
 strCmp:
 	ret
 
@@ -30,15 +31,15 @@ strClone:
 ;FREE no necesita saber el tamano de lo que quiero liberar ya que esa informacion la guarda malloc justo antes de la direccion
 ;(es decir se reserva un poco mas de memoria antes para guardar estos metadatos)
 strDelete:
-	push RBP
-	mov RBP, RSP
+	;push RBP
+	;mov RBP, RSP
 
 	cmp RDI, 0
 	je .done
 	call free
 
 .done:
-	pop RBP
+	;pop RBP
 	ret
 
 ; void strPrint(char* a, FILE* pFile)
@@ -77,8 +78,8 @@ strPrint:
 ; uint32_t strLen(char* a)
 ;a[RDI]
 strLen:
-	push RBP;ESTO NO HACE FALTA PORQUE NO MODIFICO RBP NI LLAMO A OTRA FUNCION
-	mov RBP, RSP
+	;push RBP;ESTO NO HACE FALTA PORQUE NO MODIFICO RBP NI LLAMO A OTRA FUNCION
+	;mov RBP, RSP
 
 	xor ECX, ECX; acumulador = 0
 
@@ -91,5 +92,5 @@ strLen:
 
 .fin:
 	mov EAX, ECX
-	pop RBP
+	;pop RBP
 	ret
