@@ -26,13 +26,25 @@ strClone:
 	ret
 
 ; void strDelete(char* a)
+;a[RDI]
+;FREE no necesita saber el tamano de lo que quiero liberar ya que esa informacion la guarda malloc justo antes de la direccion
+;(es decir se reserva un poco mas de memoria antes para guardar estos metadatos)
 strDelete:
+	push RBP
+	mov RBP, RSP
+
+	cmp RDI, 0
+	je .done
+	call free
+
+.done:
+	pop RBP
 	ret
 
 ; void strPrint(char* a, FILE* pFile)
 ;a[RDI], pFile[RSI]
 strPrint:
-	;push RBP; ESTO NO HACE FALTA PORQUE NO USO VARIABLES LOCALES
+	;push RBP; ESTO NO HACE FALTA PORQUE NO USO VARIABLES LOCALES NI LLAMADOS A OTRAS FUNCIONES
 	;mov RBP, RSP
 	;Quiero hacer un call a la funcion fprintf(FILE, "%s", STRING o "NULL")
 
