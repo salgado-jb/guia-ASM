@@ -4,6 +4,9 @@ extern fprintf
 
 section .data
 
+fmt_str db "%s", 0		; formato para fprintf: "%s\0"
+nul_str db "NULL", 0	; string "NULL\0"
+
 section .text
 
 global strCmp
@@ -27,13 +30,35 @@ strDelete:
 	ret
 
 ; void strPrint(char* a, FILE* pFile)
+;a[RDI], pFile[RSI]
 strPrint:
+	push RBP
+	mov RBP, RSP
+	;Quiero hacer un call a la funcion fprintf(FILE, "%s", STRING o "NULL")
+
+	cmp [RDI], 0
+	je .stringVacio
+
+	mov RDX, RDI;Pongo a en en RDX (tercer argumento)
+	mov RDI, RSI;Pongo pFile en RDI (primer argumento)
+	mov RSI, fmt_str;pongo "%s" en RSI (segundo argumento)
+	call fprintf
+	jmp .done
+
+.print_null:
+	mov RDI, RSI;Pongo pFile en RDI (primer argumento)
+	mov RSI, fmt_str;Pongo "%s" en RSI (segundo argumento)
+	mov RDX, nul_str;Pong "NULL" en RDX (tercer argumento)
+	call fprintf
+
+.done:
+	pop RBP
 	ret
 
 ; uint32_t strLen(char* a)
 ;a[RDI]
 strLen:
-	push RBP
+	push RBP;ESTO NO HACE FALTA PORQUE NO MODIFICO RBP NI LLAMO A OTRA FUNCION
 	mov RBP, RSP
 
 	xor ECX, ECX; acumulador = 0
@@ -49,3 +74,11 @@ strLen:
 	mov EAX, ECX
 	pop RBP
 	ret
+
+
+;void strPrint(char *a, FILE *pFile) {
+;    if(a[0] == '\0')
+;        fprintf(pFile, "%s", "NULL");
+;    else
+;        fprintf(pFile, "%s", a);
+;}
