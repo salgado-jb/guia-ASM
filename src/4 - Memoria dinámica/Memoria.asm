@@ -71,14 +71,14 @@ strClone:
 	inc EAX;Para que entre '\0'
 	mov EDI, EAX
 	call malloc;Ahora tengo el puntero en EAX
+	mov EBX, EAX;Voy a usar esto de puntero
 
 .loop:
-	mov EBX, EAX
-	mov cl, [R12];byte al que apunta [R12]
+	mov CL, [R12];byte al que apunta [R12]
 
-	cmp cl, 0
+	cmp CL, 0
 	je .done
-	mov byte [EBX], cl;Copio byte de R12 a EAX
+	mov byte [EBX], CL;Copio byte de R12 a EAX
 	inc R12
 	inc EBX
 	jmp .loop

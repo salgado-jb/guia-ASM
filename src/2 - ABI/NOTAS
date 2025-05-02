@@ -1,33 +1,102 @@
-make
-cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ -c main.c -o main.o
-In file included from main.c:7:
-../test-utils.h:106:13: warning: ‘print_double’ defined but not used [-Wunused-function]
-  106 | static void print_double(double v)     { printf("%.2f", v); }
-      |             ^~~~~~~~~~~~
-../test-utils.h:105:13: warning: ‘print_float’ defined but not used [-Wunused-function]
-  105 | static void print_float(float v)       { printf("%.2f", v); }
-      |             ^~~~~~~~~~~
-../test-utils.h:104:13: warning: ‘print_string’ defined but not used [-Wunused-function]
-  104 | static void print_string(char* v)      { printf("%s",   v); }
-      |             ^~~~~~~~~~~~
-../test-utils.h:103:13: warning: ‘print_uint32_t’ defined but not used [-Wunused-function]
-  103 | static void print_uint32_t(uint32_t v) { printf("%u",   v); }
-      |             ^~~~~~~~~~~~~~
-../test-utils.h:102:13: warning: ‘print_int32_t’ defined but not used [-Wunused-function]
-  102 | static void print_int32_t(int32_t v)  { printf("%d",   v); }
-      |             ^~~~~~~~~~~~~
-nasm -f elf64 -g -F DWARF Estructuras.asm -o Estructuras_asm.o
-cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ -c Estructuras.c -o Estructuras_c.o
-cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ main.o Estructuras_asm.o Estructuras_c.o -o main
-cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ -c tester.c -o tester.o
-cc -std=c11 -Wall -Wextra -pedantic -O0 -g -lm -Wno-unused-variable -Wno-unused-parameter -no-pie -z noexecstack -I ../ tester.o Estructuras_asm.o Estructuras_c.o -o tester
-Revisando offsets y tamaños de structs declarados en checkpoint...
-Traceback (most recent call last):
-  File "/home/23pez/Facultad/guia-ASM/src/test_utils/parse.py", line 6, in <module>
-    import pycparser
-ModuleNotFoundError: No module named 'pycparser'
-/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/14/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
-(.text+0x1b): undefined reference to `main'
-collect2: error: ld returned 1 exit status
-make[1]: *** [Makefile:4: diff] Error 1
-make: *** [Makefile:41: Estructuras_abi.o] Error 2
+23pez@UbuntuUba:~/Facultad/guia-ASM/src/4 - Memoria dinámica$ ./runTester.sh
+
+** Compilando
+make: 'tester' is up to date.
+
+** Corriendo Valgrind
+==13395== Memcheck, a memory error detector
+==13395== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==13395== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
+==13395== Command: ./tester
+==13395== 
+==============
+= Memoria
+==============
+- test_strLen OK
+- test_strClone_string_normal OK
+- test_strClone_string_vacio OK
+- test_strCmp_las_cadenas_que_son_iguales_son_iguales OK
+- test_strCmp_vacio_es_menor_a_todo OK
+- test_strCmp_hay_cadenas_menores_a_otras OK
+- test_strCmp_todo_es_mayor_a_vacio OK
+- test_strCmp_hay_cadenas_mayores_a_otras OK
+- test_strCmp_stress_test OK
+
+Pasaron 9 de 9 tests
+¡Pasaron todos los tests de Memoria!
+==13395== 
+==13395== HEAP SUMMARY:
+==13395==     in use at exit: 0 bytes in 0 blocks
+==13395==   total heap usage: 3 allocs, 3 frees, 1,033 bytes allocated
+==13395== 
+==13395== All heap blocks were freed -- no leaks are possible
+==13395== 
+==13395== For lists of detected and suppressed errors, rerun with: -s
+==13395== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+** Todos los tests pasan
+
+23pez@UbuntuUba:~/Facultad/guia-ASM/src/4 - Memoria dinámica$ ./runAbi.sh
+
+** Compilando
+make: 'abi_enforcer_tester' is up to date.
+
+** Corriendo Valgrind
+==13433== Memcheck, a memory error detector
+==13433== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==13433== Using Valgrind-3.23.0 and LibVEX; rerun with -h for copyright info
+==13433== Command: ./abi_enforcer_tester
+==13433== 
+==============
+= Memoria
+==============
+- test_strLen OK
+- test_strClone_string_normal
+error: [ABI_enforcer] Se incumplió ABI. Abortando...
+==13433== valgrind: Unrecognised instruction at address 0x4059cc.
+==13433==    at 0x4059CC: ??? (Memoria.asm:68)
+==13433==    by 0x4024FA: test_strClone_string_normal__impl (tester.c:41)
+==13433==    by 0x402486: test_strClone_string_normal (tester.c:39)
+==13433==    by 0x4057B4: main (tester.c:142)
+==13433== Your program just tried to execute an instruction that Valgrind
+==13433== did not recognise.  There are two possible reasons for this.
+==13433== 1. Your program has a bug and erroneously jumped to a non-code
+==13433==    location.  If you are running Memcheck and you just saw a
+==13433==    warning about a bad jump, it's probably your program's fault.
+==13433== 2. The instruction is legitimate but Valgrind doesn't handle it,
+==13433==    i.e. it's Valgrind's fault.  If you think this is the case or
+==13433==    you are not sure, please let us know and we'll try to fix it.
+==13433== Either way, Valgrind will now raise a SIGILL signal which will
+==13433== probably kill your program.
+==13433== 
+==13433== Process terminating with default action of signal 4 (SIGILL)
+==13433==  Illegal opcode at address 0x4059CC
+==13433==    at 0x4059CC: ??? (Memoria.asm:68)
+==13433==    by 0x4024FA: test_strClone_string_normal__impl (tester.c:41)
+==13433==    by 0x402486: test_strClone_string_normal (tester.c:39)
+==13433==    by 0x4057B4: main (tester.c:142)
+==13433== 
+==13433== HEAP SUMMARY:
+==13433==     in use at exit: 1,024 bytes in 1 blocks
+==13433==   total heap usage: 1 allocs, 0 frees, 1,024 bytes allocated
+==13433== 
+==13433== 1,024 bytes in 1 blocks are still reachable in loss record 1 of 1
+==13433==    at 0x4848858: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==13433==    by 0x48F93D6: _IO_file_doallocate (filedoalloc.c:101)
+==13433==    by 0x4909833: _IO_doallocbuf (genops.c:374)
+==13433==    by 0x49072BF: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:745)
+==13433==    by 0x4907DDF: _IO_new_file_xsputn (fileops.c:1244)
+==13433==    by 0x4907DDF: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1197)
+==13433==    by 0x48FBEF9: puts (ioputs.c:40)
+==13433==    by 0x405776: main (tester.c:138)
+==13433== 
+==13433== LEAK SUMMARY:
+==13433==    definitely lost: 0 bytes in 0 blocks
+==13433==    indirectly lost: 0 bytes in 0 blocks
+==13433==      possibly lost: 0 bytes in 0 blocks
+==13433==    still reachable: 1,024 bytes in 1 blocks
+==13433==         suppressed: 0 bytes in 0 blocks
+==13433== 
+==13433== For lists of detected and suppressed errors, rerun with: -s
+==13433== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+./runAbi.sh: line 20: 13433 Illegal instruction     (core dumped) valgrind --show-reachable=yes --leak-check=full --error-exitcode=99 ./abi_enforcer_tester
+** Error durante la ejecución
