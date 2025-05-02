@@ -20,8 +20,6 @@ global strLen
 ; int32_t strCmp(char* a, char* b)
 ;a[RDI], b[RSI]
 strCmp:
-	push RBP
-	mov RBP, RSP
 
 .start:
 	cmp byte [RDI], 0
@@ -35,7 +33,6 @@ strCmp:
 	je .siguiente
 	ja .aMayor
 	jb .bMayor
-
 
 .siguiente:
 	inc RDI
@@ -59,11 +56,37 @@ strCmp:
 	mov EAX, 1
 
 .done:
-	pop RBP
 	ret
 
 ; char* strClone(char* a)
+;a[RDI]
 strClone:
+	push RBP
+	mov RBP, RSP
+
+	push R12
+	mov R12, RDI
+
+	call strLen;Ahora tengo a la longitud en EAX
+	inc EAX;Para que entre '\0'
+	mov EDI, EAX
+	call malloc;Ahora tengo el puntero en EAX
+
+.loop:
+	mov EBX, EAX
+	mov cl, [R12];byte al que apunta [R12]
+
+	cmp cl, 0
+	je .done
+	mov byte [EBX], cl;Copio byte de R12 a EAX
+	inc R12
+	inc EBX
+	jmp .loop
+
+.done:
+	mov byte [EBX], 0;Termina la cadena
+	pop R12
+	pop RBP
 	ret
 
 ; void strDelete(char* a)
