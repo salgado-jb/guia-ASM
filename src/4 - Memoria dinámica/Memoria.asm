@@ -65,26 +65,26 @@ strClone:
 	mov RBP, RSP
 
 	push R12
-	mov R12, RDI
+	mov R12, RDI; 			Muevo string fuente a R12
 
-	call strLen;Ahora tengo a la longitud en EAX
-	inc EAX;Para que entre '\0'
-	mov EDI, EAX
-	call malloc;Ahora tengo el puntero en EAX
-	mov EBX, EAX;Voy a usar esto de puntero
+	call strLen; 			EAX: longitud del string fuente
+	inc EAX;				Para que entre '\0'
+	mov EDI, EAX;			Para usar la longitud como argumento para malloc
+	call malloc;			EAX: puntero a mi nuevo string
+	mov EDI, EAX;			EDI: puntero que voy a estar moviendo sobre el nuevo string
 
 .loop:
-	mov CL, [R12];byte al que apunta [R12]
-
-	cmp CL, 0
+	mov SIL, [R12];			SIL(parte baja de RDI): byte a copiar
+	cmp SIL, 0
 	je .done
-	mov byte [EBX], CL;Copio byte de R12 a EAX
+
+	mov [EDI], SIL
 	inc R12
-	inc EBX
+	inc EDI
 	jmp .loop
 
 .done:
-	mov byte [EBX], 0;Termina la cadena
+	mov byte [EDI], 0
 	pop R12
 	pop RBP
 	ret
