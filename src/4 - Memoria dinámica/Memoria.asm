@@ -29,7 +29,9 @@ strCmp:
 	cmp byte [RSI], 0
 	je .aMayor
 
-	cmp byte [RDI], byte [RSI]
+	mov AL, [RDI]
+	mov CL, [RSI]
+	cmp byte AL, CL
 	je .siguiente
 	jz .aMayor
 	jmp .bMayor
