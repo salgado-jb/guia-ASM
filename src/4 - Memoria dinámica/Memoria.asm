@@ -64,28 +64,33 @@ strClone:
 	push RBP
 	mov RBP, RSP
 
-	push R12
-	mov R12, RDI; 			Muevo string fuente a R12
+	;Pongo el string fuente en registro no volatil:
+	push RBX
+	sub RSP, 8;				Para que el stack quede alineado
+	mov RBX, RDI; 			Muevo string fuente a RBX
 
+	;Preparo nueva direccion del string:
 	call strLen; 			EAX: longitud del string fuente
 	inc EAX;				Para que entre '\0'
 	mov EDI, EAX;			Para usar la longitud como argumento para malloc
 	call malloc;			EAX: puntero a mi nuevo string
 	mov EDI, EAX;			EDI: puntero que voy a estar moviendo sobre el nuevo string
 
+	;Arranco a copiar:
 .loop:
-	mov SIL, [R12];			SIL(parte baja de RDI): byte a copiar
-	cmp SIL, 0
+	mov SIL, [RBX];			SIL(parte baja de RDI): byte a copiar
+	cmp SIL, 0;				Me fijo si el byte a copiar es el fin del string
 	je .done
 
-	mov [EDI], SIL
-	inc R12
+	mov [EDI], SIL;			Copio el byte de EBX a EDI
+	inc RBX;				Avanzo en los dos strings
 	inc EDI
 	jmp .loop
 
 .done:
-	mov byte [EDI], 0
-	pop R12
+	mov byte [EDI], 0;		Marco el fin del string
+	add RSP, 8
+	pop RBX
 	pop RBP
 	ret
 
@@ -96,12 +101,14 @@ strClone:
 strDelete:
 	;push RBP
 	;mov RBP, RSP
+	sub RSP, 8
 
 	cmp RDI, 0
 	je .done
 	call free
 
 .done:
+	add RSP, 8
 	;pop RBP
 	ret
 
