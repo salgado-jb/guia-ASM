@@ -26,15 +26,15 @@ strCmp:
 .start:
 	cmp byte [RDI], 0
 	je .a_vacio
-	cmp byte [RSI], 0
-	je .aMayor
+	;cmp byte [RSI], 0 No hace falta
+	;je .aMayor
 
 	mov AL, [RDI]
 	mov CL, [RSI]
-	cmp byte AL, CL
+	cmp AL, CL
 	je .siguiente
-	jz .aMayor
-	jmp .bMayor
+	ja .aMayor
+	jb .bMayor
 
 
 .siguiente:
@@ -52,11 +52,11 @@ strCmp:
 	jmp .done
 
 .aMayor:
-	mov EAX, 1
+	mov EAX, -1
 	jmp .done
 
 .bMayor:
-	mov EAX, (-1)
+	mov EAX, 1
 
 .done:
 	pop RBP
