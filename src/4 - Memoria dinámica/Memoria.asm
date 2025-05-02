@@ -20,6 +20,44 @@ global strLen
 ; int32_t strCmp(char* a, char* b)
 ;a[RDI], b[RSI]
 strCmp:
+	push RBP
+	mov RBP, RSP
+
+.start:
+	cmp byte [RDI], 0
+	je .a_vacio
+	cmp byte [RSI], 0
+	je .aMayor
+
+	cmp byte [RDI], byte [RSI]
+	je .siguiente
+	jz .aMayor
+	jmp .bMayor
+
+
+.siguiente:
+	inc RDI
+	inc RSI
+	jmp .start
+
+.a_vacio:
+	cmp byte [RSI], 0
+	je .iguales
+	jmp .bMayor
+
+.iguales:
+	mov EAX, 0
+	jmp .done
+
+.aMayor:
+	mov EAX, 1
+	jmp .done
+
+.bMayor:
+	mov EAX, (-1)
+
+.done:
+	pop RBP
 	ret
 
 ; char* strClone(char* a)
